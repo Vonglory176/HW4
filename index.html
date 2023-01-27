@@ -8,6 +8,35 @@
     <title>Document</title>
 </head>
 <body>
+    <h1>Calorie Burner</h1>
+
+    <div id="radioButtonBox">
+        <input type="radio" name="exerPick" id="radio1">
+        <label for="radio1">Situps</label></br>
+
+        <input type="radio" name="exerPick" id="radio2">
+        <label for="radio2">Push Ups</label></br>
+        
+        <input type="radio" name="exerPick" id="radio3">
+        <label for="radio3">Jump Rope</label></br></br>
+    </div>
+    
+    <div id="minuteInputBox">
+        <label>How Many Minutes</label></br>
+        <input type="text" id="minuteInput"></br>
+        <input type="button" value="Add Time" id="minuteButton">
+    </div> 
+
+    <div id="calorieOutputBox"></br>
+        <input type="button" value="Most Burned" id="calorieButton"></br>
+        <input type="text" id="calorieOutput" readonly>
+    </div>
+
+    <div id="showAllOutputBox"> </br></br>
+        <input type="button" value="Show All" id="showAllButton">
+        <ul id="showAllOutput"></ul>
+    </div>
+ 
     <script src="main.js"></script>
 </body>
 </html>
