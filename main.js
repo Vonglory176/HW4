@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function(_) {
-    document.getElementById('minuteButton').addEventListener('click', addButtonClick)
+    document.getElementById('minuteButton').addEventListener('click', minuteButtonClick)
     //document.getElementById('calorieButton').addEventListener('click', calorieButtonClick) //Optional 
     //document.getElementById('showAllButton').addEventListener('click', showAllButtonClick) //Optional
 });
@@ -12,38 +12,34 @@ function Workout(exercise, minutes, calories) {
 
 const workoutArray = [] //Use this for the Array!
 
-function addButtonClick() {          //I know this is might be overkill but I thought it was neat
-    console.log('Add button clicked')
-
-    //Radio Button Check! (Returns radioId on Success)
-    const radioCheck = new Promise((resolve, reject) => { 
-
+//Radio Button Check
+function radiocheck(){ return new Promise((resolve, reject) => {
         document.querySelectorAll('input[name="exerPick"]').forEach(i => { //Iterating all input elements with name 'exerPick'
             if(i.checked) resolve(i.id)}) //Returns ID of checked
-        reject("pick an exercise")
+        reject("Pick an exercise!")       //Returns error if none
+    })
+}
 
-    }).catch()
+//Minute Input Check
+function minuteInputCheck(){ return new Promise((resolve, reject) => {
+        let input = parseInt(document.getElementById('minuteInput').value)
+        input > 0 ? resolve(input) :                                                           //Returns minutes for legit integer
+                    reject( input === 0 ? "Don't be lazy!" : "Use a real number for minutes!") //Returns error for 0 or other
+    })
+}
 
-    //Minute Input Check! (Returns minuteInput on Success)
-    const minuteInputCheck = new Promise((resolve, reject) => {
+//Minute Button Clicked
+async function minuteButtonClick() {
+    try {
+        const radio = await radiocheck()
+        const minute = await minuteInputCheck()
 
-        let input = parseInt(document.getElementById('minuteInput').value) 
-        input >= 0 ? resolve(input) : reject("use a real number for minutes") /*Maybe add funny alert for 0?*/
+        radio === 'radio1' ? (exercise = 'Sit Ups', minute, caloriesPer = 10) : //First Button?
+            radio === 'radio2' ? (exercise = 'Push Ups', minute, caloriesPer = 15) : //Second Button?
+                                    (exercise = 'Jump Rope', minute, caloriesPer = 18)   //Third Button!
 
-    }).catch()
-
-    //Promise Excecution & Object Creation/Push 
-    Promise.all([ radioCheck, minuteInputCheck ]).then((values) => { //values = [ RadioId, Minutes ]
-
-        let exercise = '', minutes = '', calories = ''
-
-        values[0] === 'radio1' ?    (exercise = 'Sit Ups', minutes = values[1], calories = (minutes * 10)) : //First Button?
-            values[0] === 'radio2' ?    (exercise = 'Push Ups', minutes = values[1], calories = (minutes * 15)) : //Second Button?
-                                            (exercise = 'Jump Rope', minutes = values[1], calories = (minutes * 18)) //Third Button!
-
-        workoutArray.push(new Workout(exercise, minutes, calories))
+        workoutArray.push(new Workout(exercise, minute, caloriesPer * minute))
         console.log(workoutArray)
                 
-    }).catch((error) => {alert(`Please be sure to ${error}!`)}) //Custom Error, depending on faliure
-    
+    } catch (error) { alert(error) } //Custom Error, depending on faliure
 }
